@@ -10,7 +10,7 @@ print(my_str.lower())
 #print(my_str.replace('name', 'apple'))
 print(my_str.replace('name', 'apple', 1))
 
-#       <4>  my_str.split(, sub_strcount) : string
+#       <4>  my_str.split(, sub_strcount) : string     Split әдісі жақшадағы символға байланысты Стрингті бөліп тастап, листқа салады
 result = my_str.split()
 result = my_str.split('name', 1)
 print(result)
