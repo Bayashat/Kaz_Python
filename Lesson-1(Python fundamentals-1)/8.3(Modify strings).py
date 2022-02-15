@@ -8,6 +8,7 @@ print(my_str.lower())
 
 #       <3> replace string: replaces a string with another string
 #print(my_str.replace('name', 'apple'))
+my_str = my_str.replace('name', 'apple')
 print(my_str.replace('name', 'apple', 1))
 
 #       <4>  my_str.split(, sub_strcount) : string     Split әдісі жақшадағы символға байланысты Стрингті бөліп тастап, листқа салады
