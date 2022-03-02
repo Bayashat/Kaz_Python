@@ -30,7 +30,7 @@ for i in fruits:   # "Apple", "Lemon"
 
                 # 5. The range() function
 # автоматом 0-ден бастайды
-# range(6)  0-5     range(1,6) - 1-5
+# range(6) :  0-5     range(1,6) - 1-5
 for i in range(1,5): # 1 2 3 4
     print(i)
 

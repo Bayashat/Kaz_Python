@@ -2,7 +2,6 @@
 # time's all in second : from 1970.01.01
 
 from cmath import pi
-from ctypes.wintypes import PINT
 import time
 
 ticks = time.time()

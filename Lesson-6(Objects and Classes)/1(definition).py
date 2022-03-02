@@ -15,11 +15,10 @@ class Cats:
         print("Cat is drinking")
 
 
-Class has 4 built-in functions: 
+Class has 3 built-in functions: 
 1. __init__
 2. __del__
 3. __str__
-4.
 '''
 
 class Cats:
