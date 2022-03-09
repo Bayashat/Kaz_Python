@@ -1,7 +1,5 @@
 # Regular expression
 import re
-from sys import flags
-from turtle import pensize
 
 pattern1 = "cat"
 pattern2 = "bird"
@@ -20,14 +18,14 @@ print(re.search(pattern2, string)) # None
 
 # 1. [] бірнеше символды іздеуге 
 # Multiple patterns : ran or run
-ptn = r"r[au]n"
+ptn = r"r[au]n"  # run or ran
 print(re.search(ptn, string))
 
 # 2. 
-print(re.search(r"r[A-Z]n", "dog rWns to me"))
-print(re.search(r"r[a-z]n", "dog runs to me"))
-print(re.search(r"r[0-9]n", "dog r2ns to me"))
-print(re.search(r"r[0-9a-z]n", "dog runs to me"))
+print(re.search(r"r[A-Z]n", "dog rWns to me"))  # rAn, rBn, rHn
+print(re.search(r"r[a-z]n", "dog runs to me"))  # ren, rwn, ron,
+print(re.search(r"r[0-9]n", "dog r2ns to me"))  # r1n, r5n, r9n, r2n
+print(re.search(r"r[0-9a-zA-Z_]n", "dog runs to me")) # r5n, ren, rSn, r_n, 
 
 
 # 3. Special characters:
@@ -76,10 +74,10 @@ print(re.search(r"Mon(day)?","Monday"))
 print(re.search(r"Mon(day)?","Mon"))
 
             # 8) : Multiple line
-string = '''
+string = 
 dog runs to cat.
 I run to dog.
-'''
+
 print(re.search(r"^I", string)) 
 print(re.search(r"^I", string, flags=re.M)) 
 
@@ -125,3 +123,4 @@ print(re.split(r"[,;\.]", "a;b,c.d;e")) # ['a', 'b', 'c', 'd', 'e']
             # 16. compile 
 compiled_re = re.compile(r"r[ua]n")
 print(compiled_re.search("dog runs to cat"))
+'''
