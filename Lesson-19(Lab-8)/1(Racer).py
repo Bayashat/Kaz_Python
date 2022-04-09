@@ -1,5 +1,5 @@
-
 import pygame, sys
+from pygame.locals import *
 import random, time
  
 #Initialzing 
@@ -20,8 +20,8 @@ WHITE = (255, 255, 255)
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 600
 SPEED = 5
+SPEED_COIN = 3
 SCORE = 0
- 
 #Setting up Fonts
 font = pygame.font.SysFont("Verdana", 60)
 font_small = pygame.font.SysFont("Verdana", 20)
@@ -29,72 +29,72 @@ game_over = font.render("Game Over", True, BLACK)
  
 background = pygame.image.load("AnimatedStreet.png")
  
-coin = pygame.image.load("coin.png")
-pygame.transform.scale(coin, (10,10))
-
 #Create a white screen 
 screen = pygame.display.set_mode((400,600))
 screen.fill(WHITE)
 pygame.display.set_caption("Game")
  
 class Enemy(pygame.sprite.Sprite):
-      def __init__(self):
+      def __init__(self):  # бастапқы қалпын құру
         super().__init__() 
         self.image = pygame.image.load("Enemy.png")
         self.rect = self.image.get_rect()
         self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)  
  
-      def move(self):
-        self.rect.move_ip(0,SPEED)
-        if (self.rect.top > 600):
+      def move(self):  # машинаның қозғалуы
+        self.rect.move_ip(0,SPEED)  # Y осі бойынша төмен қарай жылжып отырады
+        if (self.rect.top > 600):  # экраннан шыққан кезде жоғарыдан қайта пайда болады
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
- 
-class Coin(pygame.sprite.Sprite):
+
+class Coins(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = coin
+        self.image = pygame.image.load("coins.jpg")
         self.rect = self.image.get_rect()
-        self.rect.center = (random.randint(40, SCREEN_WIDTH-40), 0)  
+        self.rect.center = (random.randint(50, SCREEN_WIDTH - 50), 0) 
 
     def move(self):
-        self.rect.move_ip(0, 5)
-        if (self.rect.top > 600):
+        self.rect.move_ip(0, SPEED_COIN)
+        if (self.rect.top > 600):  # экраннан шыққан кезде жоғарыдан қайта пайда болады
             self.rect.top = 0
             self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
-    
+
     def hit(self):
-        global SCORE
-        SCORE += 1
+            self.rect.top = 0
+            self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
 
-        self.top = 0
-        self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
 
+ 
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self):   # бастапқы қалпын құру
         super().__init__() 
         self.image = pygame.image.load("Player.png")
         self.rect = self.image.get_rect()
-        self.rect.center = (160, 520)
+        self.rect.center = (160, 520)  # біздіңт машинаның бастапқы орны
         
-    def move(self):
-        pressed_keys = pygame.key.get_pressed()
+    def move(self):   # машинаның қозғалуы
+        pressed_keys = pygame.key.get_pressed()  # клавитураның басылғанын анықтау
        #if pressed_keys[K_UP]:
             #self.rect.move_ip(0, -5)
        #if pressed_keys[K_DOWN]:
             #self.rect.move_ip(0,5)
          
         if self.rect.left > 0:
-              if pressed_keys[pygame.K_LEFT]:
+              if pressed_keys[K_LEFT]:  # солға жылжытады
                   self.rect.move_ip(-5, 0)
         if self.rect.right < SCREEN_WIDTH:        
-              if pressed_keys[pygame.K_RIGHT]:
+              if pressed_keys[K_RIGHT]:  # оңға жылжытады
                   self.rect.move_ip(5, 0)
+
+
+        
+
                    
 #Setting up Sprites        
 P1 = Player()
 E1 = Enemy()
-C1 = Coin()
+C1 = Coins()
  
 #Creating Sprites Groups
 enemies = pygame.sprite.Group()
@@ -106,37 +106,38 @@ coins.add(C1)
 all_sprites = pygame.sprite.Group()
 all_sprites.add(P1)
 all_sprites.add(E1)
-all_sprites.add(coins)
- 
+all_sprites.add(C1)
+
 #Adding a new User event 
 INC_SPEED = pygame.USEREVENT + 1
-pygame.time.set_timer(INC_SPEED, 1000)
+pygame.time.set_timer(INC_SPEED, 1000)  # каждый 1 секунд өткенін анықтайды
  
 #Game Loop
 while True:
        
     #Cycles through all events occurring  
     for event in pygame.event.get():
-        if event.type == INC_SPEED:
+        if event.type == INC_SPEED:  # каждый 1 секнд өткен сайын, жылдамдық += 0,5
               SPEED += 0.5     
-        if event.type == pygame.QUIT:
+        if event.type == QUIT:
             pygame.quit()
             sys.exit()
  
-    screen.blit(background, (0,0))
-    scores = font_small.render(str(SCORE), True, BLACK)
-    screen.blit(scores, (380,10))
-
+    screen.blit(background, (0,0))  # жолдың суретін экранға салу
+    scores = font_small.render(str(SCORE), True, BLACK) # ұпайдың жазуы
+    screen.blit(scores, (380,10))  # ұпайды экранның сол жақ жоғары жағына қойдық
+ 
     #Moves and Re-draws all Sprites
-    for entity in all_sprites:
+    for entity in all_sprites:  # цикл арқылы барлық персонажды қозғалтамыз        
         screen.blit(entity.image, entity.rect)
         entity.move()
     
-    if pygame.sprite.spritecollideany(P1, coins):
+    if pygame.sprite.spritecollideany(P1, coins):  # Машинамен теңгенің түйісуін анықтайды
+        SCORE += 1
         C1.hit()
 
     #To be run if collision occurs between Player and Enemy
-    if pygame.sprite.spritecollideany(P1, enemies):
+    if pygame.sprite.spritecollideany(P1, enemies):  # қандай да бір обьектінің басқа бір класспен соғылуын анықтайды
           pygame.mixer.Sound('crash.wav').play()
           time.sleep(0.5)
                     
