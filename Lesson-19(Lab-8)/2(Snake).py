@@ -73,13 +73,24 @@ class Snake(pygame.sprite.Sprite):
         if self.is_add == True:
             self.add_to_snake()
 
-        if self.elements[len(self.elements) - 1][0] > 10:
-            for i in range(0, self.size - 1):  #  0 1
-                self.elements[i][0] = self.elements[i+1][0]
-                self.elements[i][1] = self.elements[i+1][1]
 
-            self.elements[len(self.elements) - 1][0] += self.dx
-            self.elements[len(self.elements) - 1][1] += self.dy
+        if self.elements[len(self.elements) - 1][0] < 10:
+            self.dx = -self.dx
+            # self.elements = self.elements[::-1]  # элементтерін кері бағытта ауыстырады
+        elif self.elements[len(self.elements) - 1][0] > SCREEN_WIDTH-10:
+            self.dx = -self.dx # self.elements = self.elements[::-1]
+
+        elif self.elements[len(self.elements) - 1][1] < 10 :
+            self.dy = -self.dy # self.elements = self.elements[::-1]
+        elif self.elements[len(self.elements) - 1][1] > SCREEN_HEIGHT-10:
+           self.dy = -self.dy # self.elements = self.elements[::-1]
+
+        for i in range(0, self.size - 1):  #  0 1
+            self.elements[i][0] = self.elements[i+1][0]
+            self.elements[i][1] = self.elements[i+1][1]
+
+        self.elements[len(self.elements) - 1][0] += self.dx
+        self.elements[len(self.elements) - 1][1] += self.dy
         
 
     def eat(self, foodx, foody):
