@@ -54,6 +54,20 @@ class Food(pygame.sprite.Sprite):
         self.x = (random.randint(10, SCREEN_WIDTH-10))
         self.y = (random.randint(10, SCREEN_WIDTH-10))
 
+class Big_Food(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.x = (random.randint(10, SCREEN_WIDTH-10))
+        self.y = (random.randint(10, SCREEN_WIDTH-10))
+        self.radius = 30
+
+    def draw(self):
+        pygame.draw.circle(screen, RED, (self.x, self.y), self.radius)
+
+    def generate(self):
+        self.x = (random.randint(10, SCREEN_WIDTH-10))
+        self.y = (random.randint(10, SCREEN_WIDTH-10))
+
 class Snake(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -102,6 +116,15 @@ class Snake(pygame.sprite.Sprite):
             score += 1
             return True
         return False
+    def eat_big(self, foodx, foody):
+        x = self.elements[len(self.elements) - 1][0]
+        y = self.elements[len(self.elements) - 1][1]
+        
+        if abs(x-foodx) <= 35 and abs(y-foody) <= 35:
+            global score 
+            score += 3
+            return True
+        return False
     def add_to_snake(self):
         self.size += 1
         new_pointX = self.elements[0][0]-2*self.dx
@@ -115,11 +138,20 @@ class Snake(pygame.sprite.Sprite):
 
 snake1 = Snake()
 food = Food()
+big_food = Big_Food()
+
+timer = 0
+time_on = False
+INC_SPEED = pygame.USEREVENT + 1
+pygame.time.set_timer(INC_SPEED, 1000)  # каждый 1 секунд өткенін анықтайды
+
 #Game Loop
 while True:
     clock.tick(30)
     #Cycles through all events occurring  
-    for event in pygame.event.get():   
+    for event in pygame.event.get(): 
+        if event.type == INC_SPEED and time_on == True:  # каждый 1 секнд өткен сайын, жылдамдық += 0,5
+                timer += 1
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
@@ -140,6 +172,10 @@ while True:
     if snake1.eat(food.x, food.y):
         snake1.is_add = True
         food.generate()
+    if snake1.eat_big(big_food.x, big_food.y):
+        time_on = False
+        snake1.is_add = True
+        big_food.generate()
     screen.fill(BLACK)
     scores = font.render(str(score), True, WHITE) # ұпайдың жазуы
     screen.blit(scores, (700,50))
@@ -147,6 +183,14 @@ while True:
     
     snake1.draw()
     food.draw()
+    if timer >= 5:
+        time_on = False
+    if timer % 5 == 0 and score > 0 and score % 5 == 0 :
+        time_on = True
+
+    if time_on == True:
+        big_food.draw()
+
     snake1.move()
          
     pygame.display.update()
